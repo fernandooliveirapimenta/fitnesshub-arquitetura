@@ -23,6 +23,14 @@ O FitnessHub precisa exibir rankings e métricas de alunos em telões de academi
 *   **Prós:** Utiliza Protobuf (binário), sendo extremamente leve e rápido. Contratos tipados e suporte a streaming sobre HTTP/2. Excelente para ambientes de microserviços.
 *   **Contras:** Requer um Proxy (como o Kong ou Envoy) para traduzir gRPC-Web para gRPC no backend.
 
+### 4. WebSockets (Bidirecional Tradicional)
+*   **Prós:** Padrão de mercado com suporte universal. Baixíssima latência pós-handshake e suporte a dados binários e texto.
+*   **Contras (Limitações de Escala):**
+    *   **Stateful Scaling:** Exige que o servidor mantenha uma conexão TCP aberta por cliente, consumindo memória RAM significativa.
+    *   **Head-of-line Blocking:** Como roda sobre TCP, um único pacote perdido atrasa toda a fila de mensagens daquela conexão.
+    *   **Gerenciamento de Conexões:** Exige "sticky sessions" e complexidade em Load Balancers para lidar com conexões de longa duração.
+    *   **Zombie Connections:** Necessidade de implementar Heartbeats (Ping/Pong) manuais para detectar quedas silenciosas.
+
 ## Decisão Proposta: **WebTransport**
 Para o núcleo de telemetria e rankings (Telões), a proposta é seguir com **WebTransport**.
 
