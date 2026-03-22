@@ -23,10 +23,15 @@ Plataforma SaaS para redes de academias exibirem métricas de treino em tempo re
 - **Infraestrutura:** Kubernetes (K8s).
 - **Componentes:**
   - `app-autorizacao-sts`: Serviço de Token e Segurança (STS).
-  - `app-fitnesshub-backend`: Core business e processamento de métricas.
-  - `app-fitness-portal-academia`: Backend administrativo para unidades.
-- **Gateway:** Kong API Gateway (gerenciamento de tráfego e políticas).
-- **Mensageria:** Nats.io (comunicação assíncrona e eventos em tempo real).
+  - `app-fitnesshub-backend`: Core business e **único componente que se conecta ao Nats.io**. Provê WebSockets para dados em tempo real.
+  - `app-fitness-portal-academia`: Interface administrativa e **provedor da aplicação web exibida nos Telões**.
+- **Banco de Dados:** PostgreSQL.
+- **Gateway:** Kong Ingress Controller.
+- **Mensageria:** Nats.io (Barramento de eventos interno para o Backend).
+- **Comunicação:**
+  - O `app-fitness-portal-academia` provê o app web para o **Telão**.
+  - O **Telão** consome dados de ranking em tempo real via **WebSocket conectado ao app-fitnesshub-backend**.
+  - O **Nats.io** é utilizado internamente pelo `app-fitnesshub-backend` para processamento e distribuição de eventos entre instâncias, sem exposição direta para clientes ou outros serviços.
 
 ### Mobile (Flutter)
 - **Framework:** Flutter (compilação nativa para iOS e Android).
