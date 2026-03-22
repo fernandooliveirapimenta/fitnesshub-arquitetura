@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "Miro": {
+      "url": "https://mcp.miro.com/",
+      "type": "http"
+    }
+  }
+}
